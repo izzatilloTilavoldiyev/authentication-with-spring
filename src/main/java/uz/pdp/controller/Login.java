@@ -2,6 +2,7 @@ package uz.pdp.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,8 +29,10 @@ public class Login extends HttpServlet {
         if (user == null) {
             printWriter.write("<h1>Password or login error</h1>");
         }else {
-            printWriter.write("<h1>Welcome to system "+user.getFirstName()+ " "+ user.getLastName()+"</h1>");
-            printWriter.write("<h1>Your phone number: "+user.getPhoneNumber()+"</h1>");
+            Cookie cookie = new Cookie("authApp", user.getUsername());
+            cookie.setMaxAge(60);
+            resp.addCookie(cookie);
+            resp.sendRedirect("/cabinet");
         }
     }
 }

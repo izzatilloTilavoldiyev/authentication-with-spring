@@ -68,4 +68,25 @@ public class DbService {
             throw new RuntimeException(e);
         }
     }
+    public User loadUserByCookie(String username) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection(url, dbUser, dbPassword);
+            String query = "select * from users where username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                username = resultSet.getString(2);
+                String firstName = resultSet.getString(3);
+                String lastName = resultSet.getString(4);
+                String phoneNumber = resultSet.getString(5);
+                return new User(id, firstName, lastName, phoneNumber, username);
+            }
+            return null;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
